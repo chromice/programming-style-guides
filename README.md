@@ -1,4 +1,5 @@
-programming-style-guides
-========================
+# Style guides
 
-A collection of programming style guides
+A collection of programming style guides.
+
+
