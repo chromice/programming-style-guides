@@ -1,7 +1,7 @@
 # PHP coding style guide
 
-**Version:** 1.1.0
-**Date**: March 19, 2014
+**Version:** 1.1.1
+**Date**: March 16, 2015
 
 This guide is based on [PSR-0], [PSR-1], [PSR-2] coding style guides, with some bits borrowed from Wordpress [PHP][Wordpress PHP] and [HTML][Wordpress HTML] coding standards.
 
@@ -31,7 +31,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 - Method and function names MUST be declared in lower case with underscore separators.
 
-- Code MUST use tabs for indenting, not spaces.
+- Code MUST use tabs for indentation, not spaces.
 
 - There MUST NOT be a hard limit on line length; the soft limit MUST be 120 characters; lines SHOULD be 80 characters or less.
 
@@ -139,7 +139,9 @@ $articles = Articles::find_all_by_page($page_number, $per_page);
 
 ### 2.1. PHP tags
 
-PHP code MUST use the long `<?php ?>` tags or the short-echo `<?= ?>` tags; it MUST NOT use the other tag variations.
+PHP code MUST use long `<?php ?>` tags and short-echo `<?= ?>` tags; it MUST NOT use any other tag variation.
+
+The last instance of `?>` tag SHOULD be omitted from files to prevent whitespace character leakage.
 
 
 ### 2.2. Files
@@ -150,16 +152,9 @@ All PHP files MUST:
 - Use the Unix LF (linefeed) line ending.
 - End with a single blank line.
 
-The closing `?>` tag MUST be omitted from files containing only 
-PHP.
+A file MAY *either* declare new symbols (classes, functions, constants, etc.), *or* cause side effects by merely being included, but SHOULD NOT do both.
 
-A file SHOULD *either* declare new symbols (classes, functions, constants, etc.) and cause no other side effects, *or* it SHOULD execute logic with side effects, but SHOULD NOT do both.
-
-The phrase "side effects" means execution of logic not directly related to declaring classes, functions, constants, etc., *merely from including the file*.
-
-"Side effects" include but are not limited to: generating output, explicit use of `require` or `include`, connecting to external services, modifying ini settings, emitting errors or exceptions, modifying global or static variables, reading from or writing to a file, and so on.
-
-The following is an example of a file with both declarations and side effects; i.e, an example of what to avoid:
+**Avoid** the following scenario of a file with both declarations and side effects:
 
 ```php
 <?php
@@ -179,7 +174,7 @@ function foo()
 }
 ```
 
-The following example is of a file that contains declarations without side effects; i.e., an example of what to emulate:
+The following example is of a file that contains declarations and no side effects:
 
 ```php
 <?php
@@ -236,9 +231,9 @@ if (!isset($foo) && !isset($bar)
 ```
 
 
-### 2.4. Indenting and alignment
+### 2.4. Indentation and alignment
 
-Code MUST use tabs for indenting, not spaces. The use of spaces to horizontally align related information on multiple lines is permitted, but SHOULD be used sparingly.
+Code MUST use tabs for indentation, not spaces. Spaces MAY be used to horizontally align related information on multiple lines.
 
 ```php
 <?php
@@ -247,7 +242,7 @@ $bar    = 'bar';
 $foobar = 'foobar';
 ```
 
-The above example demonstrates a valid use of spaces for alignment, provided `$foo`, `$bar` and `$foobar` variables are indeed related.
+The example above demonstrates a valid use of spaces for alignment, provided `$foo`, `$bar` and `$foobar` variables are indeed related.
 
 For associative arrays, values SHOULD start on a new line and MUST be indented. 
 
@@ -266,13 +261,13 @@ $my_array = array(
 
 ### 2.5. Keywords, constants and variables
 
-[PHP keywords] MUST be in lower case
+[PHP keywords] MUST be in lower case.
 
-Compile-time constants `__CLASS__`, `__DIR__`, `__FILE__`, `__FUNCTION__`, etc MUST be in upper case. 
+Compile-time constants `__CLASS__`, `__DIR__`, `__FILE__`, `__FUNCTION__`, etc. MUST be in upper case. 
 
 The PHP constants `true`, `false`, and `null` MUST be in lower case.
 
-The PHP global variables `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, etc MUST be in upper case.
+The PHP global variables `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, etc. MUST be in upper case.
 
 All user defined variables MUST be in lower case.
 
@@ -301,9 +296,60 @@ Single-quoted strings MUST be used for regular expressions since, contrary to do
 
 Strict comparison operators `===`, `!==` MUST be used to avoid side effects of type coercion.
 
-`empty` function MUST be used for checking, if a variable contains an empty array, object, string.
+Variables MUST be explicity compared to `true` and `false`:
 
-`isset` function MUST only be used for checking is variable is declared and existence of an index.
+```php
+$variable = false;
+
+if (false === $variable)
+{
+    echo "Good.";
+}
+
+if (!$variable)
+{
+    echo "Hmm...";
+}
+
+```
+
+`empty` function MUST be used for checking, if a variable contains an empty array, object, string, or has not been declared:
+
+```php
+$string = '';
+
+if (empty($string))
+{
+    echo "Good.";
+}
+
+if (strlen($string) === 0)
+{
+    echo "Hmm...";
+}
+
+if (!$string)
+{
+    echo "Bad programmer!";
+}
+```
+
+`isset` function MUST be used only to check, if a variable is declared or an array contains a value by index:
+
+```php
+$string = '';
+$array = array(10 => 'Foo');
+
+if (isset($array[10]))
+{
+    echo "Good.";
+}
+
+if (isset($string))
+{
+    echo "Good.";
+}
+```
 
 ## 3. Namespace and Use Declarations
 
@@ -332,7 +378,7 @@ use OtherVendor\OtherPackage\BazClass;
 
 ## 4. Classes, Properties, and Methods
 
-The term "class" refers to all classes, interfaces, and traits.
+The term "class" refers to classes, as well as interfaces and traits.
 
 ### 4.1. Extends and Implements
 
@@ -400,7 +446,7 @@ class ClassName
 }
 ```    
 
-### 4.4. Method Arguments
+### 4.4. Arguments
 
 In the argument list, there MUST NOT be a space before each comma, and there MUST be one space after each comma.
 
@@ -505,8 +551,7 @@ The keyword `elseif` SHOULD be used instead of `else if` so that all control key
 
 ### 5.2. `switch`, `case`
 
-A `switch` structure looks like the following. Note the placement of parentheses, spaces, and braces. The `case` statement MUST be indented once from `switch`, and the `break` keyword (or other terminating keyword) MUST be indented at the same level as the `case` body. There MUST be a comment such as
-`// no break` when fall-through is intentional in a non-empty `case` body.
+A `switch` structure looks like the following. Note the placement of parentheses, spaces, and braces. The `case` statement MUST be indented once from `switch`, and the `break` keyword (or other terminating keyword) MUST be indented at the same level as the `case` body. There MUST be a comment such as `// no break` when fall-through is intentional in a non-empty `case` body.
 
 ```php
 <?php
@@ -637,7 +682,7 @@ Control structures MUST use alternative syntax (e.g. `if … endif`, `foreach �
 
 When mixing PHP and HTML together, PHP blocks MUST be indented to match the surrounding HTML code. Closing PHP blocks MUST match the same indentation level as the opening block.
 
-```php
+```html
 <main id="main">
 <?php if (empty($article)): ?>
     <article class="post">
@@ -688,15 +733,15 @@ $page_title = 'Lorem ipsum dolor sit amet';
 $dropdown_options = array('foo', 'bar', 'baz');
 ```
 
-Function and method names MUST generally contain a verb and MUST describe _either_ how they affect the state _or_ what they return.
+Function and method names SHOULD contain a verb and MUST describe _either_ how they affect the state _or_ what they return.
 
 ```php
 <?php
 interface CartInterface
 {
     public function add_item($item);
-    public function get_item($index);
-    public function remove_item($index);
+    public function get_item_at($index);
+    public function remove_item_at($index);
     public function clear();
 }
 ```
@@ -715,17 +760,60 @@ Query parameters and data values MUST be escaped to prevent SQL injections.
 
 Large arrays and hashes SHOULD NOT be passed to functions and methods.
 
-Resources SHOULD be open 
+Resources SHOULD be open right before they are needed, and closed right after they are not.
 
 ### 9.2. Don’t repeat yourself
 
 Copying and pasting chunks of code with slight modifications MUST be avoided. If code is being reused more then once, it MUST be encapsulated into a separate module.
 
-### 9.3. Don’t mix business logic and presentation
+### 9.3. Separate business logic from presentation
 
-Markup generation MUST NOT be done within functions or methods.
+HTML Markup generation MUST NOT be done within functions or methods.
 
-Business logic (SQL queries, input validation, data processing) MUST NOT be done within HTML/PHP templates.
+Low level business logic (SQL queries, input validation, data processing) MUST NOT be done within HTML/PHP templates.
+
+Process input first; *then* execute database queries, check internal state and pre-calculate values; *and then* use those values to generate a response.
+
+```php
+<?php
+
+// ==================
+// = Handle request =
+// ==================
+$filters = array(
+    'offset' => !empty($_GET['offset']) ? (int) $_GET['offset'] : 0,
+    'total' => !empty($_GET['total']) ? (int) $_GET['total'] : 100
+);
+$filters = array_map($filters, function ($value) {
+    return max($value, 0);
+});
+
+
+// =============================
+// = Operate on internal state =
+// =============================
+$results = get_results($filters);
+
+
+// =====================
+// = Generate response =
+// =====================
+?>
+
+<h1>Results</h1>
+
+<?php if (empty($results) || !is_array($results)): ?>
+<p>No results to display</p>
+<?php else: ?>
+<ul>
+    <?php foreach ($results as $result): ?>
+    <li><?= $result ?> </li>
+    <?php endforeach ?>
+</ul>
+<?php endif ?>
+```
+
+In MVC-speak your controller is at the top, and your view is at the bottom.
 
 ### 9.4. Don’t leave garbage behind
 

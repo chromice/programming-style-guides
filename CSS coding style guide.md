@@ -1,7 +1,7 @@
 # CSS/LESS coding style guide
 
-**Version:** 1.0.0
-**Date**: March 31, 2014
+**Version:** 1.0.1
+**Date**: March 16, 2015
 
 This document extensively borrows from [Wordpress style guide], [GitHub style guide] and [Idiomatic CSS].
 
@@ -32,9 +32,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 - Properties MUST be logically grouped and SHOULD be consistently ordered.
 
-- Properties MUST be followed by a colon and a space.
+- Property names MUST be followed by a colon and a space.
 
-- Values MUST be wrapped in double quotes, but only if they need to.
+- Property values MUST only use double quotes.
 
 - Attribute selectors MUST always use double quotes around values.
 
@@ -44,14 +44,14 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 Here is the recommended top level section structure of the main file:
 
 1. **Dependancies**: All reusable code elements, such as reset styles, mixin declarations and `@import` statements, MUST be placed at the top of the main file.
-2. **Variables**: All variables MUST go here and SHOULD be further grouped by type, e.g. colours, sizes, delays and durations, etc.
+2. **Variables**: All variables MUST go here and SHOULD be further grouped by type, e.g. colours, sizes, delays and durations, etc.
 3. **Typography**: All font family variables, scale definition, google font `@import` statements MUST go here. Default font size, font family and line height MUST be declared as styles of the `html` element here as well.
 4. **Primitives**: All default styling for block and inline HTML elements MUST go here and SHOULD be further grouped by element type, e.g. anchors, headings, lists, tables, forms, etc.
-5. **Layout**: This section MUST contain layout styles for landmark page elements, e.g. header, footer, sidebar, etc.
-6. **Components**: Each component’s styles MUST be put here.
-7. **Miscellaneous**: All debug styles MUST go here.
+5. **Layout**: This section MUST contain layout styles for landmark page elements, e.g. header, footer, sidebar, article etc., grouped by template.
+6. **Components**:  Component-specific styles, e.g. logo, navigation, slider, etc., MUST go here.
+7. **Miscellaneous**: All debug and override styles MAY be placed at the end of the stylesheet.
 
-See Comments section for more.
+See Comments section for more information
 
 ## 3. Naming conventions
 
@@ -63,7 +63,7 @@ All names MUST be declared in lowercase with dash separators.
 
 Variable names MUST be prefixed with the type of value the variable contains.
 
-Variable name MUST reflect where the variable is used, rather than what it contains, i.e. `@color-background`, not `@color-red`.
+Variable name MUST reflect what the variable represents, rather than what it contains, i.e. `@color-background`, not `@color-red`.
 
 Here are some example of well-named variables:
 
@@ -96,7 +96,7 @@ Rulesets MAY be separated by one blank line to reinforce logical grouping.
 
 Opening curly brace MUST be on same line as the last selector preceded by a space.
 
-Closing curly brace MUST be on its own line at the same indentation level as the selector.
+Closing curly brace MUST be on its own line at the same indentation level as the selector(s).
 
 An example:
 
@@ -114,17 +114,19 @@ An example:
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.selector-a,
-.selector-b {
+.selector-a, .selector-b {
     padding: 10px;
 }
 ```
 
+
 ### 4.1. Selectors
 
-Elements that occur exactly once inside a page SHOULD use IDs, otherwise, they MUST use classes.
+Elements that occur exactly once inside a page SHOULD use IDs, otherwise, they MAY use classes.
 
-Selectors MUST NOT contain more than one ID, e.g. `#header .search #quick-search` is considered harmful.
+Selectors SHOULD NOT contain more than one ID, e.g. `#header .search #quick-search` is considered harmful.
+
+Class selectors MUST be used as the last resort. Instead, authors SHOULD use adjacent, child,  attibute and other selectors: `:nth-child(2n)` instead of `.even`; `a[href^="#"]` instead of `a.hash`.
 
 
 ### 4.2. Properties
@@ -208,11 +210,11 @@ el {
 }
 ```
 
-Zero values SHOULD NOT have units unless necessary, such as with `transition-duration`.
+Zero values SHOULD NOT have units unless required, e.g. the value of `transition-duration`.
 
-Line height SHOULD be unit-less, unless necessary to be defined as a specific pixel or rem value.
+Line height SHOULD be unit-less, unless it is necessary to be defined as a specific pixel or rem value.
 
-Colour values MUST be declared in lower-case hex values
+Values of opaque colours MUST be declared as lower-case hex values: `#f00` instead of `red` or `rgb(255,0,0)`.
 
 
 ### 4.3. Media queries
@@ -233,7 +235,7 @@ Large blocks of single declarations can use a slightly different, single-line fo
 .selector-3 { width: 30%; }
 ```
 
-Long, comma-separated property values — such as collections of gradients or shadows — can be arranged across multiple lines in an effort to improve readability and produce more useful diffs. There are various formats that could be used; one example is shown below.
+Long, comma-separated property values, e.g. composite gradients or shadows, SHOULD be arranged across multiple lines in order to improve readability and produce better diffs:
 
 ```css
 .selector {
@@ -251,7 +253,7 @@ Long, comma-separated property values — such as collections of gradients or sh
 
 LESS code MUST be use `//` comment blocks exclusively, instead of `/* */`.
 
-Comments MUST be placed on a new line above their subject.
+Comments MUST be on a separate line before their subject.
 
 Code SHOULD be broken into discrete sections and subsections.
 
