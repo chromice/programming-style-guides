@@ -207,9 +207,9 @@ Lines SHOULD NOT be longer than 80 characters; lines longer than that SHOULD be 
 
 There MUST NOT be trailing whitespace at the end of non-blank lines.
 
-No more than 2 blank lines MAY be added to improve readability and to indicate related blocks of code.
+Blank lines SHOULD be used to group related blocks of code together. No more than 2 blank lines MUST be used as a separator.
 
-There MUST NOT be more than one statement per line.
+There MUST NOT be more than one expression ending with a semicolon per line.
 
 Long lines MAY be split into more. Each additional line MAY be indented and MUST begin with a operator.
 
@@ -271,7 +271,7 @@ The PHP constants `true`, `false`, and `null` MUST be in lower case.
 
 The PHP global variables `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, etc. MUST be in upper case.
 
-All user defined variables MUST be in lower case.
+Variable names MUST be in lower case.
 
 [PHP keywords]: http://php.net/manual/en/reserved.keywords.php
 
