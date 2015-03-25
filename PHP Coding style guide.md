@@ -108,7 +108,7 @@ class Foo extends Bar implements FooInterface
 }
 ```
 
-### 1.2. Declaration example
+### 1.2. Template example
 
 ```php
 <?php 
@@ -140,6 +140,8 @@ $articles = Articles::find_all_by_page($page_number, $per_page);
 ### 2.1. PHP tags
 
 PHP code MUST use long `<?php ?>` tags and short-echo `<?= ?>` tags; it MUST NOT use any other tag variation.
+
+`<?= $variable ?>` MUST be used instead of `<?php echo $variable ?>`.
 
 The last instance of `?>` tag SHOULD be omitted from files to prevent whitespace character leakage.
 
@@ -817,6 +819,6 @@ In MVC-speak your controller is at the top, and your view is at the bottom.
 
 ### 9.4. Don’t leave garbage behind
 
-Debug statements, purposeless code or unused classes, functions and methods MUST NOT be committed to the main branch.
+Debug statements, purposeless code or unused classes, functions and methods MUST NOT be committed to the master branch.
 
 
